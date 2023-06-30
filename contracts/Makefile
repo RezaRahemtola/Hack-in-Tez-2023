@@ -3,19 +3,17 @@
 USERNAME		=	LeTamanoirDev
 RPC_URL			=	https://ghostnet.tezos.marigold.dev/
 
-INITIAL_STORAGE	=	"(Pair (Pair (Pair {} {}) {} {}) 0)"
-
-
-SRC 			=	./contract/main.jsligo
+MAIN 			=	./contract/main.jsligo
+STORAGE			=	./contract/default_storage.jsligo
 
 NAME			=	ameno
-MODULE_NAME		=	ameno
 
 config:
 	./scripts/config.sh $(USERNAME) $(RPC_URL)
 
 compile:
-	ligo compile contract $(SRC) -m $(MODULE_NAME) > ./artifacts/$(NAME).tz
+	ligo compile contract $(MAIN) -o ./artifacts/$(NAME).tz
+	./scripts/storage.sh
 
 deploy:
-	./scripts/deploy.sh $(USERNAME) $(NAME) ./artifacts/$(NAME).tz $(INITIAL_STORAGE)
+	./scripts/deploy.sh $(USERNAME) $(NAME) ./artifacts/$(NAME).tz ./artifacts/$(NAME)_default_storage.tz

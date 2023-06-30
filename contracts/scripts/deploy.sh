@@ -3,7 +3,7 @@
 USERNAME=$1
 ALIAS=$(echo $RANDOM)
 CONTRACT=$3
-INITIAL_STORAGE=$4
+INITIAL_STORAGE=$(cat $4)
 
 octez-client originate contract $ALIAS transferring 0 \
     from $USERNAME running $CONTRACT \

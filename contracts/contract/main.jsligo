@@ -1,0 +1,18 @@
+#import "./lib/fa2/asset/multi_asset.jsligo" "MULTIASSET"
+#import "./types.jsligo" "TYPES"
+#import "./functions.jsligo" "FUNCTIONS"
+const main = ([p, s]: [TYPES.parameter, TYPES.storage]): TYPES.ret =>
+  match(
+    p,
+    {
+      Mint: (p: [nat, nat, bytes, bytes, bytes, bytes]) =>
+        FUNCTIONS.mint(p[0], p[1], p[2], p[3], p[4], p[5], s),
+      AddAdministrator: (p: address) => FUNCTIONS.addAdministrator(p, s),
+      Buy: (p: [nat, nat, address]) => FUNCTIONS.buy(p[0], p[1], p[2], s),
+      Sell: (p: [nat, nat, nat]) => FUNCTIONS.sell(p[0], p[1], p[2], s),
+      Transfer: (p: MULTIASSET.transfer) => FUNCTIONS.transfer(p, s),
+      Balance_of: (p: MULTIASSET.balance_of) => FUNCTIONS.balanceOf(p, s),
+      Update_operators: (p: MULTIASSET.update_operators) =>
+        FUNCTIONS.updateOperators(p, s)
+    }
+  );
