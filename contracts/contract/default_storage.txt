@@ -1,0 +1,10 @@
+{
+  administrators: Set.literal(list(["tz1Tf2MR4bVPUvZhwLV8zARcbi9KLpGbgddH" as address, "tz1cgVTs7GuFkwEMzXzDkCHS794yB61R4bWD" as address])) as set<address>,
+  offers: Map.empty as map<[address, nat], TOffer>,
+  ledger: Big_map.empty as MULTIASSET.Ledger.t,
+  metadata: Big_map.empty as MULTIASSET.Metadata.t,
+  token_metadata: Big_map.empty as MULTIASSET.TokenMetadata.t,
+  operators: Big_map.empty as MULTIASSET.Operators.t,
+  owner_token_ids: Set.empty as set<[MULTIASSET.Storage.owner, MULTIASSET.Storage.token_id]>,
+  token_ids: Set.empty as set<MULTIASSET.Storage.token_id>
+}

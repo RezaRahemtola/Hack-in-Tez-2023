@@ -1,9 +1,9 @@
 #import "./lib/fa2/asset/multi_asset.jsligo" "MULTIASSET"
-export type offer = { quantity: nat, price: nat };
+export type TOffer = { quantity: nat, price: nat };
 
-export type storage = {
+export type TStorage = {
   administrators: set<address>,
-  offers: map<[address, nat], offer>,
+  offers: map<[address, nat], TOffer>,
   ledger: MULTIASSET.Ledger.t,
   metadata: MULTIASSET.Metadata.t,
   token_metadata: MULTIASSET.TokenMetadata.t,
@@ -12,13 +12,26 @@ export type storage = {
   token_ids: set<MULTIASSET.Storage.token_id>
 };
 
-export type ret = [list<operation>, storage];
+export type TReturn = [list<operation>, TStorage];
 
-export type parameter =
-  | ["Mint", nat, nat, bytes, bytes, bytes, bytes]
+export type TMintParameter = {
+  token_id: nat,
+  quantity: nat,
+  name: bytes,
+  description: bytes,
+  symbol: bytes,
+  ipfsUrl: bytes
+};
+
+export type TBuyParameter = { token_id: nat, quantity: nat, seller: address };
+
+export type TSellParameter = { token_id: nat, quantity: nat, price: nat };
+
+export type TMainParameter =
+  | ["Mint", TMintParameter]
   | ["AddAdministrator", address]
-  | ["Buy", nat, nat, address]
-  | ["Sell", nat, nat, nat]
+  | ["Buy", TBuyParameter]
+  | ["Sell", TSellParameter]
   | ["Transfer", MULTIASSET.transfer]
   | ["Balance_of", MULTIASSET.balance_of]
   | ["Update_operators", MULTIASSET.update_operators];

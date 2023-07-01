@@ -1,4 +1,8 @@
-(Pair (Pair (Pair { "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb" } {}) {} {})
+(Pair (Pair (Pair { "tz1Tf2MR4bVPUvZhwLV8zARcbi9KLpGbgddH" ;
+                    "tz1cgVTs7GuFkwEMzXzDkCHS794yB61R4bWD" }
+                  {})
+            {}
+            {})
       (Pair {} {})
       {}
       {})

@@ -4,9 +4,12 @@
                    (list %requests (pair (address %owner) (nat %token_id)))
                    (contract %callback
                       (list (pair (pair %request (address %owner) (nat %token_id)) (nat %balance))))))
-            (or (pair %buy (pair nat nat) address)
-                (pair %mint (pair (pair nat nat) bytes bytes) bytes bytes)))
-        (or (or (pair %sell (pair nat nat) nat)
+            (or (pair %buy (pair (nat %quantity) (address %seller)) (nat %token_id))
+                (pair %mint
+                   (pair (pair (bytes %description) (bytes %ipfsUrl)) (bytes %name) (nat %quantity))
+                   (bytes %symbol)
+                   (nat %token_id))))
+        (or (or (pair %sell (pair (nat %price) (nat %quantity)) (nat %token_id))
                 (list %transfer
                    (pair (address %from_) (list %txs (pair (address %to_) (nat %token_id) (nat %amount))))))
             (list %update_operators
@@ -216,7 +219,7 @@
                           UPDATE 1 ;
                           NIL operation ;
                           PAIR }
-                        { DROP 2 ; PUSH string "1" ; FAILWITH } }
+                        { DROP 2 ; PUSH string "Unauthorized" ; FAILWITH } }
                    { DUP 2 ;
                      CDR ;
                      CDR ;
@@ -358,20 +361,14 @@
                  DIG 5 ;
                  DROP 2 ;
                  IF_LEFT
-                   { DUP ;
-                     CDR ;
-                     DUP 2 ;
-                     CAR ;
-                     CDR ;
-                     DIG 2 ;
-                     CAR ;
-                     CAR ;
+                   { UNPAIR ;
+                     UNPAIR ;
                      DUP 4 ;
                      CAR ;
                      CDR ;
                      CDR ;
-                     DUP 2 ;
-                     DUP 5 ;
+                     DUP 4 ;
+                     DUP 4 ;
                      PAIR ;
                      GET ;
                      IF_NONE
@@ -383,20 +380,20 @@
                          AMOUNT ;
                          COMPARE ;
                          LT ;
-                         IF { DROP 7 ; PUSH string "5" ; FAILWITH }
-                            { DUP 4 ;
+                         IF { DROP 7 ; PUSH string "Amount sent is not enough" ; FAILWITH }
+                            { DUP 3 ;
                               CONTRACT unit ;
-                              IF_NONE { PUSH string "6" ; FAILWITH } {} ;
+                              IF_NONE { PUSH string "Contract not found" ; FAILWITH } {} ;
                               PUSH mutez 1 ;
                               DUP 3 ;
                               CAR ;
                               MUL ;
                               UNIT ;
                               TRANSFER_TOKENS ;
-                              DUP 4 ;
-                              DUP 4 ;
-                              PAIR ;
+                              DUP 3 ;
                               DUP 6 ;
+                              PAIR ;
+                              DUP 5 ;
                               DUP 8 ;
                               CAR ;
                               CAR ;
@@ -406,8 +403,8 @@
                               DIG 8 ;
                               SWAP ;
                               EXEC ;
-                              DUP 5 ;
-                              DUP 5 ;
+                              DUP 4 ;
+                              DUP 7 ;
                               PAIR ;
                               SOURCE ;
                               DIG 2 ;
@@ -417,7 +414,7 @@
                               SWAP ;
                               EXEC ;
                               DUP 3 ;
-                              DIG 5 ;
+                              DIG 4 ;
                               DIG 4 ;
                               CDR ;
                               SUB ;
@@ -434,8 +431,8 @@
                               CDR ;
                               DIG 4 ;
                               SOME ;
-                              DUP 8 ;
-                              DIG 9 ;
+                              DUP 9 ;
+                              DIG 8 ;
                               PAIR ;
                               UPDATE ;
                               UPDATE 2 ;
@@ -473,38 +470,37 @@
                    { DIG 2 ;
                      DIG 3 ;
                      DROP 2 ;
-                     DUP ;
-                     CAR ;
-                     CAR ;
-                     CDR ;
-                     DUP 2 ;
-                     CAR ;
-                     CAR ;
-                     CAR ;
+                     UNPAIR ;
+                     UNPAIR ;
+                     UNPAIR ;
+                     DIG 2 ;
+                     UNPAIR ;
+                     DIG 4 ;
+                     UNPAIR ;
                      PUSH nat 0 ;
-                     DUP 3 ;
+                     DUP 5 ;
                      COMPARE ;
-                     LE ;
-                     IF { DROP 4 ; PUSH string "0" ; FAILWITH }
-                        { DUP 4 ;
+                     EQ ;
+                     IF { DROP 7 ; PUSH string "Quantity must be greater than 0" ; FAILWITH }
+                        { DUP 7 ;
                           CAR ;
                           CAR ;
                           CAR ;
                           SENDER ;
                           MEM ;
                           NOT ;
-                          IF { DROP 4 ; PUSH string "1" ; FAILWITH }
-                             { DUP 4 ;
-                               DUP 5 ;
+                          IF { DROP 7 ; PUSH string "Unauthorized" ; FAILWITH }
+                             { DUP 7 ;
+                               DUP 8 ;
                                CAR ;
                                DUP ;
                                CAR ;
-                               DUP 7 ;
+                               DUP 10 ;
                                CAR ;
                                CAR ;
                                CDR ;
-                               DIG 5 ;
-                               DUP 6 ;
+                               DIG 7 ;
+                               DUP 7 ;
                                SENDER ;
                                PAIR ;
                                SWAP ;
@@ -535,7 +531,7 @@
                                CDR ;
                                DUP ;
                                CDR ;
-                               DUP 6 ;
+                               DUP 9 ;
                                CDR ;
                                CDR ;
                                CDR ;
@@ -544,15 +540,11 @@
                                SOME ;
                                PUSH string "decimals" ;
                                UPDATE ;
-                               DUP 7 ;
-                               CDR ;
-                               CAR ;
+                               DIG 5 ;
                                SOME ;
                                PUSH string "symbol" ;
                                UPDATE ;
-                               DUP 7 ;
-                               CDR ;
-                               CDR ;
+                               DIG 8 ;
                                SOME ;
                                PUSH string "thumbnailUri" ;
                                UPDATE ;
@@ -560,17 +552,11 @@
                                SOME ;
                                PUSH string "interfaces" ;
                                UPDATE ;
-                               DUP 7 ;
-                               CAR ;
-                               CDR ;
-                               CDR ;
+                               DIG 7 ;
                                SOME ;
                                PUSH string "description" ;
                                UPDATE ;
                                DIG 6 ;
-                               CAR ;
-                               CDR ;
-                               CAR ;
                                SOME ;
                                PUSH string "name" ;
                                UPDATE ;
@@ -634,13 +620,9 @@
                      DIG 3 ;
                      DIG 4 ;
                      DROP 3 ;
-                     DUP ;
-                     CAR ;
-                     CDR ;
-                     DUP 2 ;
-                     CAR ;
-                     CAR ;
-                     DUP ;
+                     UNPAIR ;
+                     UNPAIR ;
+                     DUP 3 ;
                      SOURCE ;
                      DUP 6 ;
                      CAR ;
@@ -655,7 +637,7 @@
                      COMPARE ;
                      GT ;
                      IF { DROP 5 ; PUSH string "2" ; FAILWITH }
-                        { DUP ;
+                        { DUP 3 ;
                           SELF_ADDRESS ;
                           PAIR ;
                           SOURCE ;
@@ -678,8 +660,7 @@
                           CDR ;
                           CDR ;
                           DIG 6 ;
-                          DIG 7 ;
-                          CDR ;
+                          DIG 6 ;
                           PAIR ;
                           DIG 6 ;
                           SOURCE ;

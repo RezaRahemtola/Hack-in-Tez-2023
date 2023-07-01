@@ -13,7 +13,7 @@ config:
 
 compile:
 	ligo compile contract $(MAIN) -o ./artifacts/$(NAME).tz
-	./scripts/storage.sh
+	ligo compile storage ./contract/main.jsligo '$(shell cat ./contract/default_storage.txt)' -o ./artifacts/$(NAME)_default_storage.tz
 
 deploy:
 	./scripts/deploy.sh $(USERNAME) $(NAME) ./artifacts/$(NAME).tz ./artifacts/$(NAME)_default_storage.tz
