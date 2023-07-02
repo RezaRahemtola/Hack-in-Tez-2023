@@ -372,7 +372,7 @@
                      PAIR ;
                      GET ;
                      IF_NONE
-                       { DROP 6 ; PUSH string "3" ; FAILWITH }
+                       { DROP 6 ; PUSH string "Token not found" ; FAILWITH }
                        { PUSH mutez 1 ;
                          DUP 2 ;
                          CAR ;
@@ -636,7 +636,7 @@
                      DUP 3 ;
                      COMPARE ;
                      GT ;
-                     IF { DROP 5 ; PUSH string "2" ; FAILWITH }
+                     IF { DROP 5 ; PUSH string "Balance too low" ; FAILWITH }
                         { DUP 3 ;
                           SELF_ADDRESS ;
                           PAIR ;

@@ -11,7 +11,7 @@
   "dependencies": {
     "@next/font": "13.1.2",
     "@taquito/beacon-wallet": "^14.0.0",
-    "@taquito/taquito": "^14.0.0",
+    "@taquito/taquito": "^14.2.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
