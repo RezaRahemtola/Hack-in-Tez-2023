@@ -19,12 +19,12 @@ const Header = (): JSX.Element => {
         </div>
 
         <div className="navbar-center">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="flex px-1">
             <li className="mx-2">
               <Link
-                className={
-                  router.pathname.includes("/marketplace") ? "active" : ""
-                }
+                className={`${
+                  router.pathname.includes("/marketplace") ? "bg-white" : ""
+                } p-2 rounded-md bg-opacity-20`}
                 href="/marketplace"
               >
                 Marketplace
@@ -33,7 +33,9 @@ const Header = (): JSX.Element => {
 
             <li>
               <Link
-                className={router.pathname.includes("/library") ? "active" : ""}
+                className={`${
+                  router.pathname.includes("/library") ? "bg-white" : ""
+                } p-2 rounded-md bg-opacity-20`}
                 href="/library"
               >
                 My Library
@@ -44,23 +46,18 @@ const Header = (): JSX.Element => {
 
         <div className="navbar-end">
           {address ? (
-            <ul className="menu menu-horizontal px-1">
-              <li>
-                <details>
-                  <summary>
-                    {[...address].filter((_, i) => i < 20).join("")}...
-                  </summary>
-
-                  <ul className="mt-1 bg-base-200">
-                    <li>
-                      <a className="link-error" onClick={disconnectWallet}>
-                        disconnect
-                      </a>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-            </ul>
+            <details className="dropdown">
+              <summary className="btn btn-sm btn-ghost lowercase">
+                {[...address].filter((_, i) => i < 20).join("")}...
+              </summary>
+              <ul className="mt-2 p-2 shadow menu dropdown-content z-[1] bg-base-300 rounded-box">
+                <li>
+                  <a className="link p-2 link-error" onClick={disconnectWallet}>
+                    disconnect
+                  </a>
+                </li>
+              </ul>
+            </details>
           ) : (
             <button className="btn btn-sm btn-primary" onClick={connectWallet}>
               Connect Wallet
